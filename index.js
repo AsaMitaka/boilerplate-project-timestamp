@@ -14,7 +14,6 @@ app.get('/api/hello', function (req, res) {
 });
 
 app.get('/api/:data?', function (req, res) {
-  // Make the data parameter optional
   const { data } = req.params;
   let dateUnix;
   let dateUTC;
