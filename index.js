@@ -13,7 +13,8 @@ app.get('/api/hello', function (req, res) {
   res.json({ greeting: 'hello API' });
 });
 
-app.get('/api/:data', function (req, res) {
+app.get('/api/:data?', function (req, res) {
+  // Make the data parameter optional
   const { data } = req.params;
   let dateUnix;
   let dateUTC;
@@ -21,12 +22,18 @@ app.get('/api/:data', function (req, res) {
   if (!data) {
     dateUnix = Date.now().valueOf();
     dateUTC = new Date().toUTCString();
+
+    return res.json({
+      unix: dateUnix,
+      utc: dateUTC,
+    });
   }
+
   const isNumber = !isNaN(parseFloat(data)) && isFinite(data);
   const dateToParseDate = isNumber ? parseInt(data) : data;
 
   if (!Date.parse(new Date(dateToParseDate))) {
-    res.status(400).json({
+    return res.status(400).json({
       error: 'Invalid Date',
     });
   }
