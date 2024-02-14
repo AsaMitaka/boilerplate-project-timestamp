@@ -1,32 +1,18 @@
-const express = require('express');
-const cors = require('cors');
-const app = express();
-
-app.use(cors({ optionsSuccessStatus: 200 }));
-app.use(express.static('public'));
-
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/views/index.html');
-});
-
-app.get('/api/hello', function (req, res) {
-  res.json({ greeting: 'hello API' });
-});
-
 app.get('/api/:data?', function (req, res) {
   const { data } = req.params;
-  let dateUnix;
-  let dateUTC;
 
   if (!data) {
-    dateUnix = Date.now().valueOf();
-    dateUTC = new Date().toUTCString();
+    const dateUnix = Date.now();
+    const dateUTC = new Date().toUTCString();
 
     return res.json({
       unix: dateUnix,
       utc: dateUTC,
     });
   }
+
+  let dateUnix;
+  let dateUTC;
 
   const isNumber = !isNaN(parseFloat(data)) && isFinite(data);
   const dateToParseDate = isNumber ? parseInt(data) : data;
@@ -44,8 +30,4 @@ app.get('/api/:data?', function (req, res) {
     unix: dateUnix,
     utc: dateUTC,
   });
-});
-
-const listener = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
 });
